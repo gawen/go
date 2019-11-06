@@ -1476,7 +1476,13 @@ func writeframes(ctxt *Link, syms []*sym.Symbol) []*sym.Symbol {
 				// TODO(bryanpkc): This is imprecise. In general, the instruction
 				// that stores the return address to the stack frame is not the
 				// same one that allocates the frame.
-				if pcsp.value > 0 {
+
+				// Emit DWARF CFIs which always restore the Link Register,
+				// avoiding to use the DWARF rule DW_CFA_same_rule which seems
+				// to be not well interpreted by old stack unwinders like
+				// Breakpad.
+				//if pcsp.value > 0 {
+				if true {
 					// The return address is preserved at (CFA-frame_size)
 					// after a stack frame has been allocated.
 					deltaBuf = append(deltaBuf, dwarf.DW_CFA_offset_extended_sf)
